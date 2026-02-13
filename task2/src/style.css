@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+input{
+  @apply  cursor-pointer;
+}
+
+input[type="text"],[type="tel"],[type="email"]{
+  @apply font-normal;
+}
+
+.table-custom{
+  @apply border-collapse border-2 border-[#009BCF] min-w-full bg-white;
+
+  th{
+    @apply font-medium;
+  }
+
+  th,td{
+    @apply py-2 px-3 border-2 border-[#009BCF] text-nowrap;
+  }
+
+  td{
+    @apply text-white;
+  }
+}

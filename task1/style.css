@@ -1,0 +1,218 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Poppins, Arial, Helvetica, sans-serif;
+}
+html,
+body{
+  width: 100%;
+  height: 100%;
+}
+
+body{
+  background-image: url("bg1.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+.inner{
+  width: 80%;
+  margin: 100px auto 30px;
+  border-radius: 60px 60px 0 0;
+  overflow: hidden;
+  box-shadow: 2px 2px 30px #999;
+
+  nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 13%;
+    background-color: white;
+    border-bottom: 1px solid #bbb;
+
+    img{
+      width: 70px;
+      height: 70px;
+      mix-blend-mode: multiply;
+    }
+
+    ul{
+      list-style: none;
+      display: flex;
+      font-size: 14px;
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+
+      li:last-child {
+        color: #526dbe;
+        font-weight: 700;
+      }
+    }
+    span{
+      display: none;
+    }
+  }
+  
+}
+
+.inner-body{
+  background-image: url("bg2.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding: 20px 20px 50px;
+
+  .ib-upper{
+    max-width: 500px;
+    text-align: center;
+    margin: 0 auto 20px;
+    color: #526dbe;
+
+    p{
+      color: #001959;
+    }
+  }
+
+  .ib-lower{
+    max-width: 300px;
+    padding: 30px 0 0;
+    background: white;
+    margin: auto;
+    box-shadow: 2px 2px 30px #999;
+    border: 1px solid #bbb;
+
+    h2{
+      text-align: center;
+      color: #001959;
+      padding: 0 30px;
+    }
+
+    form{
+      padding: 15px 30px 20px;
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid #bbb;
+      
+      label{
+        font-size: 10px;
+        margin-bottom: 3px;
+        color: #001959;
+      }
+      input{
+        margin-bottom: 10px;
+        outline: none;
+        border: 2px solid #ddd;
+        color: #001959;
+        padding: 6px 8px 4px;
+        width: 100%;
+      }
+
+      input:focus{
+        border-color: #526dbe;
+      }
+
+      input[type="password"]{
+        padding-right: 50px;
+      }
+
+      .input-pass{
+        position: relative;
+      }
+
+      .input-pass::after {
+        content: "show";
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        font-size: 14px;
+        color: #526DBE;
+        font-weight: 700;
+      }
+
+      button{
+        background-color: #526DBE;
+        color: white;
+        margin-top: 4px;
+        padding: 6px;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+      }
+    }
+    
+    .signup{
+      background-color: #eee;
+      padding: 20px 30px 30px;
+
+      button{
+        cursor: pointer;
+        color: white;
+        padding: 4px;
+        width: 100%;
+        border: 2px solid #bbb;
+        transition: all 0.3s ease;
+        color: #001959;
+        font-weight: 600;
+      }
+
+      button:hover{
+        border-color: #526dbe;
+      }
+
+      p{
+        margin-top: 14px;
+        font-size: 14px;
+        text-align: center;
+        color: #001959;
+
+        a{
+          color: #001959;
+          font-weight: 700;
+          position: relative;
+          text-decoration: none;
+        }
+
+        a::after{
+          content: "";
+          position: absolute;
+          width: 0;
+          transition: all 0.5s ease;
+          height: 2px;
+          background-color: #999;
+          bottom: -4px;
+          left: auto;
+          right: 0;
+        }
+
+        a:hover::after{
+          background-color: #526dbe;
+          transform-origin: 100%;
+          width: 100%;
+          left: 0;
+        }
+
+      }
+    }
+
+  }
+}
+
+.promo-wrap{
+  padding-bottom: 30px;
+}
+
+.promo{
+  width: fit-content;
+  margin: auto;
+  font-size: 25px;
+
+  a{
+    color: black;
+    font-weight: 700;
+    text-decoration: none;
+  }
+}

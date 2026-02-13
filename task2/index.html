@@ -1,0 +1,319 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/src/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <h1 class="text-4xl sm:text-6xl lg:text-8xl px-12 my-5 md:my-7 font-bold text-center">
+    Application Form
+  </h1>
+
+  <!-- Form Body #E3EEF9 -->
+
+  <div class="bg-[#E3EEF9] py-8 px-2 md:px-8">
+
+    <div class="max-w-360 mx-auto">
+
+      <!-- First Section #6585A4 -->
+
+      <h2 class="bg-[#6585A4] text-white py-2 mx-2 px-4 lg:mx-8 text-xl">
+        A. General Questions
+      </h2>
+
+      <div class="my-6 ml-4 mr-2 lg:ml-16 lg:mr-8 font-medium">
+
+        <div class="flex flex-col md:flex-row gap-2 md:gap-4">
+          <label for="name" class="md:text-nowrap">
+            Proposed Insured's Name:
+            <br>
+            <span class="text-[12px]">
+              (Please use capital letters)
+            </span>
+          </label>
+          <input type="text" id="name" class="w-full bg-white border-none outline-none px-4 h-8 md:h-auto">
+        </div>
+
+        <div class="mt-4 flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+          <label for="dob">Birth Date:
+            <input type="date" name="dob" id="dob" class="w-30 ml-2">
+          </label>
+          <div class="flex flex-wrap items-center gap-3 lg:gap-6">Gender:
+            <label for="male" class="flex items-center gap-2">
+              <input type="radio" name="gender" id="male" value="male" class="w-6 h-6"> Male
+            </label>
+            <label for="female" class="flex items-center gap-2">
+              <input type="radio" name="gender" id="female" value="female" class="w-6 h-6"> Female
+            </label>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-2 md:gap-4 mt-4 md:items-center">
+          <label for="address" class="text-nowrap">
+            Address:
+          </label>
+          <input type="text" id="address" class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2">
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-2 md:gap-4 mt-4 md:items-center">
+          <label for="phone" class="text-nowrap">
+            Phone Number:
+          </label>
+          <input type="tel" id="phone" class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2">
+          <label for="email" class="text-nowrap">
+            Email Address:
+          </label>
+          <input type="email" id="email" class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2">
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-2 md:gap-4 mt-4 md:items-center">
+          <label for="id" class="text-nowrap">
+            ID Number:
+          </label>
+          <input type="text" id="id" class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2">
+          <label for="ssn" class="text-nowrap">
+            Social Security Number:
+          </label>
+          <input type="text" id="ssn" class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2">
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center gap-3 lg:gap-6">Status:
+          <label for="single" class="flex items-center gap-2">
+            <input type="radio" name="status" id="single" value="single" class="w-6 h-6"> Single
+          </label>
+          <label for="married" class="flex items-center gap-2">
+            <input type="radio" name="status" id="married" value="married" class="w-6 h-6"> Married
+          </label>
+          <label for="divorced" class="flex items-center gap-2">
+            <input type="radio" name="status" id="divorced" value="divorced" class="w-6 h-6"> Divorced
+          </label>
+          <label for="others" class="flex items-center gap-2">
+            <input type="radio" name="status" id="others" value="others" class="w-6 h-6"> Others
+          </label>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-4 mt-4 md:items-center">
+          <div class="flex flex-col md:flex-row gap-2 md:gap-4 md:items-center md:flex-1 md:max-w-[550px]">
+            <label for="phone" class="text-nowrap">
+              Occupation:
+            </label>
+            <input type="text" id="phone" class="flex-1 bg-transparent border-b-gray-400 border-b-2 outline-none px-2">
+          </div>
+          <div class="flex flex-wrap items-center gap-3 lg:gap-6">
+            Are you retiree?:
+            <label for="yes" class="flex items-center gap-2">
+              <input type="radio" name="retiree" id="yes" value="single" class="w-6 h-6"> Yes
+            </label>
+            <label for="no" class="flex items-center gap-2">
+              <input type="radio" name="retiree" id="no" value="no" class="w-6 h-6"> No
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Second Section #6585A4 -->
+
+      <h2 class="bg-[#6585A4] text-white py-2 mx-2 px-4 lg:mx-8 text-xl">
+        B. Type of Health Coverage
+      </h2>
+
+      <div class="my-6 ml-4 mr-2 lg:ml-16 lg:mr-8 font-medium">
+
+        <div class="flex flex-col md:flex-row w-full border border-[#009BCF]">
+          <div class="border border-[#009BCF] bg-white py-3 px-6 flex-1 flex flex-col justify-center">
+            <div class="flex flex-wrap md:flex-nowrap md:flex-col lg:flex-row lg:items-center gap-3">
+              Employee:
+              <div class="flex flex-wrap gap-3 items-center">
+                <label for="yes" class="flex items-center gap-2">
+                  <input type="radio" name="employee" id="yes" value="single" class="w-6 h-6"> Yes
+                </label>
+                <label for="no" class="flex items-center gap-2">
+                  <input type="radio" name="employee" id="no" value="no" class="w-6 h-6"> No
+                </label>
+              </div>
+            </div>
+            <span class="mt-2">Plan Choice:</span>
+          </div>
+          <div class="border border-[#009BCF] bg-white py-3 px-6 flex-1 flex flex-col justify-center">
+            <div class="flex flex-wrap md:flex-nowrap md:flex-col lg:flex-row lg:items-center gap-3">
+              Spouse:
+              <div class="flex flex-wrap gap-3 items-center">
+                <label for="yes" class="flex items-center gap-2">
+                  <input type="radio" name="spouse" id="yes" value="single" class="w-6 h-6"> Yes
+                </label>
+                <label for="no" class="flex items-center gap-2">
+                  <input type="radio" name="spouse" id="no" value="no" class="w-6 h-6"> No
+                </label>
+              </div>
+            </div>
+            <span class="mt-2">Plan Choice:</span>
+          </div>
+          <div class="border border-[#009BCF] bg-white py-3 px-6 flex-1 flex flex-col justify-center">
+            <div class="flex flex-wrap md:flex-nowrap md:flex-col lg:flex-row lg:items-center gap-3">
+              Children:
+              <div class="flex flex-wrap gap-3 items-center">
+                <label for="yes" class="flex items-center gap-2">
+                  <input type="radio" name="children" id="yes" value="single" class="w-6 h-6"> Yes
+                </label>
+                <label for="no" class="flex items-center gap-2">
+                  <input type="radio" name="retiree" id="no" value="no" class="w-6 h-6"> No
+                </label>
+              </div>
+            </div>
+            <span class="mt-2">Plan Choice:</span>
+          </div>
+        </div>
+
+        <p class="mt-4">Complete If Spouse/Children are Proposed for Insurance:</p>
+
+        <div class="mt-4 overflow-x-auto">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>SSN no.</th>
+                <th>Relationship to<br> proposed insured</th>
+                <th>Birth Date</th>
+                <th>Age</th>
+                <th>Sex</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+              </tr>
+              <tr>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+              </tr>
+              <tr>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+              </tr>
+              <tr>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Third Section #6585A4 -->
+
+      <h2 class="bg-[#6585A4] text-white py-2 mx-2 px-4 lg:mx-8 text-xl">
+        C. The Policy
+      </h2>
+
+      <div class="my-6 ml-4 mr-2 lg:ml-16 lg:mr-8 font-medium">
+
+        <div class="flex flex-col md:flex-row gap-2 md:gap-4 mt-4 md:items-center">
+          <label for="units" class="text-nowrap">
+            Units:
+          </label>
+          <input type="text" id="units" class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2">
+          <label for="annualprem" class="text-nowrap">
+            Annual Premium:
+          </label>
+          <input type="text" id="annualprem"
+            class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2">
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center gap-3 lg:gap-6">Payment Mode:
+          <label for="single" class="flex items-center gap-2">
+            <input type="radio" name="paymentmode" id="single" value="single" class="w-6 h-6"> Annual
+          </label>
+          <label for="married" class="flex items-center gap-2">
+            <input type="radio" name="paymentmode" id="married" value="married" class="w-6 h-6"> Semi-Annual
+          </label>
+          <label for="divorced" class="flex items-center gap-2">
+            <input type="radio" name="paymentmode" id="divorced" value="divorced" class="w-6 h-6">
+            Monthly PAT (Complete PAT Card)
+          </label>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-2 md:gap-4 mt-4 md:items-center">
+          <label for="cashapply" class="text-nowrap">
+            Cash with Application:
+          </label>
+          <div class="flex items-center justify-center flex-1">
+            $
+            <input type="text" id="cashapply"
+              class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2 flex-1">
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-2 md:gap-4 mt-4 md:items-center">
+          <label for="planmodalprem" class="text-nowrap">
+            Planned modal premium:
+          </label>
+          <div class="flex items-center justify-center flex-1">
+            $
+            <input type="text" id="planmodalprem"
+              class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2 flex-1">
+          </div>
+        </div>
+
+        <div class="w-full mt-6 flex flex-col md:flex-row gap-4 md:gap-10 md:items-center">
+
+          <div class="text-[#009CCE] md:w-[60%] text-lg">
+            <span class="font-bold">
+              Terms & Conditions
+            </span>
+            <p class="text-justify">
+              Improvement should be measured regularly and assessed in order for you to know what's beneficial and what
+              is not. This will help you set new targets.
+            </p>
+          </div>
+
+          <div class="flex-1 w-full">
+            <div class="flex flex-col gap-2 mt-4">
+              <label for="signature" class="text-nowrap">
+                Signature:
+              </label>
+              <input type="text" id="signature"
+                class="w-full h-10 bg-white border-[#009BCF] border-2 outline-none px-2">
+            </div>
+            <div class="flex flex-col gap-2 mt-4">
+              <label for="date" class="text-nowrap">
+                Date:
+              </label>
+              <input type="text" id="date"
+                class="w-full bg-transparent border-b-gray-400 border-b-2 outline-none px-2">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>
