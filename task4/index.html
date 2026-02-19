@@ -1,13 +1,112 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="/src/style.css" rel="stylesheet">
 </head>
+
 <body>
-  <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+
+  <header>
+    <h1 class="page-width text-[40px] font-semibold p-[20px] text-center">
+      API Response Filtering
+    </h1>
+  </header>
+
+  <section class="page-width pt-[50px]">
+
+    <h2 class="text-[30px] py-[20px]">Filters</h2>
+    <form id="filter-form" class="border border-dashed border-gray-600 p-[20px] flex flex-col w-full gap-[20px]">
+      <div class="flex flex-col gap-[10px]">
+        <p class="text-[20px]">Search</p>
+        <div>
+          <input type="text" id="search" name="search" class="border border-gray-600 px-[14px] py-[8px] outline-none rounded-md">
+          <p class="text-[12px]">(Search by title, description)</p>
+        </div>
+      </div>
+      <div class="flex flex-col gap-[10px]">
+        <p class="text-[20px]">Price range</p>
+        <div>
+          <input type="text" id="price-min" name="priceMin" placeholder="Min."
+            class="border border-gray-600 px-[14px] py-[8px] outline-none rounded-md">
+          -
+          <input type="text" id="price-max" name="priceMax" placeholder="Max."
+            class="border border-gray-600 px-[14px] py-[8px] outline-none rounded-md">
+        </div>
+
+      </div>
+      <div class="flex flex-col gap-[10px]">
+        <p class="text-[20px]">Categories</p>
+        <div id="category-list" class="flex gap-[20px] flex-wrap">
+        </div>
+      </div>
+      <div class="flex gap-[8px] flex-wrap">
+        <button type="submit" class="border-none outline-none px-[14px] py-[8px] 
+        rounded-md bg-blue-900">
+          Apply Filters
+        </button>
+        <button type="button" id="reset-form-button" class="border-none outline-none px-[14px] py-[8px] 
+        rounded-md bg-red-500">
+          Reset Filters
+        </button>
+      </div>
+    </form>
+
+  </section>
+
+  <section class="page-width pt-[50px]">
+
+    <h2 class="text-[30px] py-[20px]">Sort By</h2>
+    <div class="border border-dashed border-gray-600 p-[20px]">
+
+      <select name="sortby" id="sortby" class="px-[14px] py-[8px] outline-none 
+        border border-gray-600 rounded-md">
+        <option value="" class="bg-black text-gray-300">
+          --Select--
+        </option>
+        <option value="pricelth" class="bg-black text-gray-300">
+          Price Low to High
+        </option>
+        <option value="pricehtl" class="bg-black text-gray-300">
+          Price High to Low
+        </option>
+        <option value="ratelth" class="bg-black text-gray-300">
+          Rating Low to High
+        </option>
+        <option value="ratehtl" class="bg-black text-gray-300">
+          Rating High to Low
+        </option>
+      </select>
+
+    </div>
+
+  </section>
+
+  <section class="page-width py-[50px]">
+
+    <div class="w-full overflow-x-auto">
+      <h2 class="text-[30px] py-[20px]">Results</h2>
+      <table id="product-table" class="table-custom">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>title</th>
+            <th>price</th>
+            <th>description</th>
+            <th>category</th>
+            <th>image</th>
+            <th>rate</th>
+            <th>rate count</th>
+          </tr>
+        </thead>
+        <tbody id="product-table-body">
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <script src="src/main.js"></script>
 </body>
+
 </html>

@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-black text-gray-300;
+  }
+}
+
+@utility page-width {
+  @apply max-w-[1280px] px-[30px] mx-auto;
+}
+
+@utility table-custom {
+  @apply  border-collapse border border-dashed border-gray-600;
+  
+  th, td {
+    @apply p-[20px] border border-dashed border-gray-600;
+  }
+
+}
