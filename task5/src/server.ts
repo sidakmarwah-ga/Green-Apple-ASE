@@ -1,11 +1,11 @@
 import "reflect-metadata"
 import dotenv from 'dotenv';
+dotenv.config();
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import AppDataSource from './lib/db';
 import router from "./routes";
 
-dotenv.config();
 
 const app = new Koa();
 app.use(bodyParser());
