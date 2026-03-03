@@ -5,10 +5,12 @@ import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import AppDataSource from './lib/db';
 import router from "./routes";
+import koaQs from 'koa-qs';
 
 
 const app = new Koa();
 app.use(bodyParser());
+koaQs(app);
 
 app.use(router.routes()).use(router.allowedMethods());
 

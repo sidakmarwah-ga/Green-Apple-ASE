@@ -176,6 +176,14 @@
   dependencies:
     "@types/koa" "*"
 
+"@types/koa-qs@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.npmjs.org/@types/koa-qs/-/koa-qs-2.0.5.tgz"
+  integrity sha512-ofLLx3FJVHtnCPINtzFEBZTBHu3hjGmBcMyv7Z1i9HfmvKGpJ8N34WEJLdR9A9rBivNLazFcd+kVAzdmcrGq3A==
+  dependencies:
+    "@types/koa" "*"
+    "@types/qs" "*"
+
 "@types/koa@*", "@types/koa@^3.0.1":
   version "3.0.1"
   resolved "https://registry.npmjs.org/@types/koa/-/koa-3.0.1.tgz"
@@ -829,6 +837,14 @@ koa-compose@^4.1.0:
   resolved "https://registry.npmjs.org/koa-compose/-/koa-compose-4.1.0.tgz"
   integrity sha512-8ODW8TrDuMYvXRwra/Kh7/rJo9BtOfPc6qO8eAfC80CnCvSjSl0bkRM24X6/XBBEyj0v1nRUQ1LyOy3dbqOWXw==
 
+koa-qs@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/koa-qs/-/koa-qs-3.0.0.tgz"
+  integrity sha512-05IB5KirwMs3heWW26iTz46HuMAtrlrRMus/aNH1BRDocLyF/099EtCB0MIfQpRuT0TISvaTsWwSy2gctIWiGA==
+  dependencies:
+    merge-descriptors "^1.0.1"
+    qs "^6.9.4"
+
 "koa@^2.0.0 || ^3.0.0", koa@^3.1.1:
   version "3.1.1"
   resolved "https://registry.npmjs.org/koa/-/koa-3.1.1.tgz"
@@ -877,6 +893,11 @@ media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
   integrity sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==
+
+merge-descriptors@^1.0.1:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-1.0.3.tgz"
+  integrity sha512-gaNvAS7TZ897/rVaZ0nMtAyxNyi/pdbjbAwUpFQpN70GqnVfOiXpeUUMKRBmzXaSQ8DdTX4/0ms62r2K+hE6mQ==
 
 mime-db@^1.54.0:
   version "1.54.0"
@@ -1092,7 +1113,7 @@ pstree.remy@^1.1.8:
   resolved "https://registry.npmjs.org/pstree.remy/-/pstree.remy-1.1.8.tgz"
   integrity sha512-77DZwxQmxKnu3aR542U+X8FypNzbfJ+C5XQDk3uWjWxn6151aIMGthWYRXTqT1E5oJvg+ljaa2OJi+VfvCOQ8w==
 
-qs@^6.5.2:
+qs@^6.5.2, qs@^6.9.4:
   version "6.15.0"
   resolved "https://registry.npmjs.org/qs/-/qs-6.15.0.tgz"
   integrity sha512-mAZTtNCeetKMH+pSjrb76NAM8V9a05I9aBZOHztWy/UqcJdQYNsf59vrRKWnojAT9Y+GbIvoTBC++CPHqpDBhQ==

@@ -8,7 +8,7 @@ import { customerRepo } from "./customers.controller";
 export const orderRepo = AppDataSource.getRepository(Order);
 
 export const getAllOrders = async (ctx: Context) => {
-    const { page, limit } = ctx.query;
+    const { skip, take } = ctx.query;
     let res;
 
     const options = {
@@ -34,24 +34,24 @@ export const getAllOrders = async (ctx: Context) => {
         }
     } as any;
 
-    if (!page && !limit) {
+    if (!skip && !take) {
         res = await orderRepo.find(options);
-    } else if (!page && limit) {
-        const lim = Number(limit);
-        if (Number.isNaN(lim) || lim < 0) ctx.throw(400, 'Limit must be a number >= 0');
+    } else if (!skip && take) {
+        const tk = Number(take);
+        if(Number.isNaN(tk) || Math.round(tk) !== tk || tk < 1) ctx.throw(400, 'Take must be an Integer >= 1');
         res = await orderRepo.find({
             ...options,
-            take: lim
+            take: tk
         });
     } else {
-        const lim = Number(limit);
-        const pg = Number(page);
-        if (Number.isNaN(pg) || pg < 1) ctx.throw(400, 'Page must be a number >= 1');
-        if (Number.isNaN(lim) || lim < 0) ctx.throw(400, 'Limit must be a number >= 0');
+        const tk = Number(take);
+        const sk = Number(skip);
+        if(Number.isNaN(tk) || Math.round(tk) !== tk || tk < 1) ctx.throw(400, 'Take must be an Integer >= 1');
+        if(Number.isNaN(sk) || Math.round(sk) !== sk || sk < 0) ctx.throw(400, 'Skip must be an Integer >= 0');
         res = await orderRepo.find({
             ...options,
-            skip: (pg - 1) * lim,
-            take: lim
+            skip: sk,
+            take: tk
         });
     }
 
@@ -78,7 +78,7 @@ export const getOrderByID = async (ctx: Context) => {
 }
 
 export const createOrder = async (ctx: Context) => {
-    const {customerId, status, productId, variantId, numberOfUnitsOrdered} : any = ctx.request.body;
+    const {customerId, productId, variantId, numberOfUnitsOrdered} : any = ctx.request.body;
 
     if(!customerId || !productId || !variantId) {
         ctx.status = 400;
@@ -89,6 +89,10 @@ export const createOrder = async (ctx: Context) => {
     const variantDetail = await variantRepo.findOne({where: {id: variantId}});
     if(!variantDetail) {
         ctx.throw(404, 'Variant not found');
+    }
+
+    if(variantDetail.stock === 0) {
+        ctx.throw(404, 'Product Variant Out of stock.')
     }
     
     const prod = await productRepo.exists({where: {id: productId, variants: {
@@ -103,17 +107,22 @@ export const createOrder = async (ctx: Context) => {
 
     if(!cust) ctx.throw(404, 'Invalid Customer');
 
-    let num = Number(numberOfUnitsOrdered) || 1;
-    if(numberOfUnitsOrdered <= 0) ctx.throw(400, 'number of ordered units must be greater than 0');
-    let totalAmount = (num) * variantDetail.price;
+    let num = Number(numberOfUnitsOrdered);
+    if(Number.isNaN(num) || Math.round(num) !== num || num <= 1) 
+        ctx.throw(400, 'Number of ordered units must be an Integer greater than or equal to 1');
 
-    if (status && !Object.values(OrderStatus).includes(status)) {
-        ctx.throw(400, "Invalid order status");
+    if(variantDetail.stock < num) {
+        ctx.status = 200;
+        ctx.body = {
+            message: 'Stock not available, try decreasing the number of units.'
+        }
     }
+
+    let totalAmount = (num) * variantDetail.price;
 
     const order = orderRepo.create({
         customer: {id: Number(customerId)},
-        status: status ?? OrderStatus.PENDING,
+        status: OrderStatus.PENDING,
         product: {id: Number(productId)},
         variant: {id: Number(variantId)},
         numberOfUnitsOrdered: num,
@@ -121,6 +130,10 @@ export const createOrder = async (ctx: Context) => {
     })
 
     await orderRepo.save(order);
+
+    variantDetail.stock -= num;
+
+    await variantRepo.save(variantDetail);
 
     ctx.status = 200;
     ctx.body = {
@@ -132,24 +145,9 @@ export const createOrder = async (ctx: Context) => {
 export const updateOrder = async (ctx: Context) => {
     const id = ctx.params.id;
     
-    const {customerId, status, productId, variantId, numberOfUnitsOrdered} : any = ctx.request.body;
-    
-    let prod;
-    if(productId) {
-        prod = await productRepo.exists({where: {id: productId, variants: {
-            id: variantId
-        }}, relations: ['variants']});
+    const {status} : any = ctx.request.body;
 
-        if(!prod) {
-            ctx.throw(404, 'Invalid product or variant');
-        }
-    }
-
-    let cust;
-    if(customerId) {
-        cust = await customerRepo.exists({where: {id: customerId}});
-        if(!cust) ctx.throw(404, 'Invalid Customer');
-    }
+    if(!status) ctx.throw(400, 'Status is required');
     
     const order = await orderRepo.findOne({
         where: {id},
@@ -157,38 +155,43 @@ export const updateOrder = async (ctx: Context) => {
     });
 
     if(!order) ctx.throw(404, 'Order not found');
-    
-    let variantDetail;
-    if(variantId) {
-        variantDetail = await variantRepo.findOne({where: {id: variantId}})
-        if(!variantDetail) {
-            ctx.throw(404, 'Variant not found');
-        }
-    } else {
-        variantDetail = order.variant;
-    }
 
-    let totalAmount;
+    if(order.status === OrderStatus.CANCELLED) {
+        ctx.throw(400, 'Cancelled order states can not be changed');
+    }
     
-    if(numberOfUnitsOrdered) {
-        if(numberOfUnitsOrdered <= 0) ctx.throw(400, 'number of ordered units must be greater than 0');
-        totalAmount = numberOfUnitsOrdered * variantDetail.price;
-    } else {
-        totalAmount = order.numberOfUnitsOrdered * variantDetail.price;
+    if(order.status === OrderStatus.RETURNED) {
+        ctx.throw(400, 'Returned order states can not be changed');
     }
     
     if (status && !Object.values(OrderStatus).includes(status)) {
         ctx.throw(400, "Invalid order status");
     }
 
-    order.customer = customerId ?? order.customer;
-    order.product = productId ?? order.product;
-    order.status = status ?? order.status;
-    order.variant = variantId ?? order.variant;
-    order.numberOfUnitsOrdered = numberOfUnitsOrdered ?? order.numberOfUnitsOrdered;
-    order.totalAmount = totalAmount;
+    if(status === OrderStatus.CANCELLED && order.status === OrderStatus.COMPLETE) {
+        ctx.throw(400, 'Completed orders can not be cancelled');
+    }
+    
+    if(status == OrderStatus.RETURNED) {
+        if(order.status !== OrderStatus.COMPLETE) {
+            ctx.throw(400, 'Order can not be returned before completion of order.');
+        }
 
+        const variant = await variantRepo.findOne({where: {
+            id: order.variant.id
+        }});
+
+        if(!variant) ctx.throw(400, 'Invalid Variant');
+        
+        variant.stock++;
+
+        variantRepo.save(variant);
+
+    }
+
+    order.status = status;
     await orderRepo.save(order);
+
     ctx.status = 200;
     ctx.body = {
         message: 'Order updated successfully',
@@ -204,28 +207,5 @@ export const deleteOrder = async (ctx: Context) => {
     ctx.body = {
         message: 'Order deleted successfully',
         order: res
-    }
-}
-
-export const getAllOrdersOfCustmer = async (ctx: Context) => {
-    const customerId = ctx.params.customerId;
-    if(!customerId) ctx.throw(400, 'Customer ID required');
-    const res = await orderRepo
-        .createQueryBuilder('order')
-        .innerJoin('order.product', 'product')
-        .innerJoin('order.variant', 'variant')
-        .select([
-            'order.id',
-            'order.productId',
-            'order.variantId',
-            'product.title',
-            'variant.title'
-        ])
-        .where('order.customerId = :customerId', {customerId})
-        .getRawMany();
-    
-    ctx.status = 200;
-    ctx.body = {
-        res
     }
 }

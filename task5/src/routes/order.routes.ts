@@ -8,6 +8,5 @@ orderRouter.get('/:id', orderControllers.getOrderByID);
 orderRouter.post('/', orderControllers.createOrder);
 orderRouter.put('/:id', orderControllers.updateOrder);
 orderRouter.delete('/:id', orderControllers.deleteOrder);
-orderRouter.get('/customer/:customerId', orderControllers.getAllOrdersOfCustmer);
 
 export default orderRouter;

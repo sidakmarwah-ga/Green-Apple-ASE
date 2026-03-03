@@ -88,6 +88,21 @@ Build REST APIs for a small e-commerce system with the following focus:
 
 ---
 
+# 📦 Order Status Enum
+
+The `Order` entity includes the following status values:
+
+* `Pending`
+* `Confirmed`
+* `Cancelled`
+* `Complete`
+* `Failed`
+* `Returned`
+
+Default status: **Pending**
+
+---
+
 # 🚀 Implemented Features
 
 ✅ Full CRUD for:
@@ -134,14 +149,13 @@ Build REST APIs for a small e-commerce system with the following focus:
 
 ## 🧾 Order Routes
 
-| Method | Route                          | Description                                       |
-| ------ | ------------------------------ | ------------------------------------------------- |
-| GET    | `/orders`                      | Get all orders (pagination supported)             |
-| GET    | `/orders/:id`                  | Get order by ID                                   |
-| POST   | `/orders`                      | Create order (validates stock + calculates total) |
-| PUT    | `/orders/:id`                  | Update order                                      |
-| DELETE | `/orders/:id`                  | Delete order                                      |
-| GET    | `/orders/customer/:customerId` | Get all orders of a customer                      |
+| Method | Route         | Description                                       |
+| ------ | ------------- | ------------------------------------------------- |
+| GET    | `/orders`     | Get all orders (pagination supported)             |
+| GET    | `/orders/:id` | Get order by ID                                   |
+| POST   | `/orders`     | Create order (validates stock + calculates total) |
+| PUT    | `/orders/:id` | Update order                                      |
+| DELETE | `/orders/:id` | Delete order                                      |
 
 ---
 
@@ -152,6 +166,7 @@ Build REST APIs for a small e-commerce system with the following focus:
 | GET    | `/customers`            | Get all customers (pagination supported) |
 | GET    | `/customers/:id`        | Get customer by ID                       |
 | GET    | `/customers/:id/amount` | Get total amount spent by customer       |
+| GET    | `/customers/:id/orders` | Get all orders of a customer             |
 | POST   | `/customers`            | Create customer                          |
 | PUT    | `/customers/:id`        | Update customer                          |
 | DELETE | `/customers/:id`        | Delete customer                          |
@@ -191,45 +206,47 @@ Build REST APIs for a small e-commerce system with the following focus:
 
 ---
 
-# 📄 Pagination Support
+# 📄 Pagination Support (Updated)
 
-Pagination has been implemented for the following listing endpoints:
+Pagination is implemented using **direct `skip` and `take` query parameters**.
+
+Supported endpoints:
 
 * `GET /products`
 * `GET /orders`
 * `GET /customers`
 * `GET /search`
 
-Pagination works using URL query parameters:
+### Usage:
 
 ```
-?page=NUMBER&limit=NUMBER
+?skip=NUMBER&take=NUMBER
 ```
 
 ### Example:
 
 ```
-GET /products?page=2&limit=10
+GET /products?skip=10&take=5
 ```
 
 This will:
 
-* Skip the first `(page - 1) * limit` records
-* Return the specified `limit` number of records
+* Skip the first 10 records
+* Return the next 5 records
 
 ### Validation Rules
 
-* `page` must be a number ≥ 1
-* `limit` must be a number ≥ 0
-* Invalid values return a `400 Bad Request`
+* `skip` must be a number ≥ 0
+* `take` must be a number ≥ 1
+* Invalid values return `400 Bad Request`
 
-If no pagination query parameters are provided, all records are returned.
+If no pagination parameters are provided, all records are returned.
 
 ---
 
 # ⚙️ Environment Variables
 
-Create a `.env` file in the root of the project with the following format:
+Create a `.env` file in the root of the project:
 
 ```
 PORT=
@@ -241,10 +258,10 @@ POSTGRES_PASSWORD=
 POSTGRES_DB=
 ```
 
-These variables are used to configure:
+These variables configure:
 
-* Server port
-* PostgreSQL connection
+* Application server port
+* PostgreSQL database connection
 * Dockerized database setup
 
 ---
@@ -264,12 +281,12 @@ These variables are used to configure:
 
 # 🐳 Running with Docker
 
-PostgreSQL was run inside a Docker container to ensure:
+PostgreSQL runs inside a Docker container to ensure:
 
 * Isolated development environment
 * Consistent database setup
 * Easy configuration via environment variables
-* Clean local setup without manual database installation
+* Clean local setup without manual installation
 
 ---
 
@@ -278,9 +295,9 @@ PostgreSQL was run inside a Docker container to ensure:
 * Strong understanding of relational database modeling
 * Practical usage of TypeORM
 * REST API design best practices
-* Pagination logic implementation
-* Query optimization and relations handling
-* Handling Many-to-Many relationships
+* Efficient pagination strategy
+* Query optimization using relations
+* Handling complex relationships (One-to-Many, Many-to-Many)
 * Working with PostgreSQL-specific features (`ARRAY`, `JSONB`, `ENUM`)
 * Backend architecture suitable for real-world applications
 

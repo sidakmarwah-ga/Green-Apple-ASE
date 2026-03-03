@@ -6,8 +6,10 @@ import { Variant } from './Variant';
 export enum OrderStatus {
   PENDING = "Pending",
   CONFIRMED = "Confirmed",
+  CANCELLED = "Cancelled",
   COMPLETE = "Complete",
   FAILED = "Failed",
+  RETURNED = "Returned"
 }
 
 @Entity()

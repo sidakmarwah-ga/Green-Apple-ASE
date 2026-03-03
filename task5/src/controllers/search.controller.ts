@@ -19,7 +19,7 @@ export const searchFunciton = async (ctx: Context) => {
 }
 
 export const searchFunciton2 = async (ctx: Context) => {
-    const { q, page, limit } = ctx.query;
+    const { q, skip, take } = ctx.query;
     if (!q) ctx.throw(400, 'Search query required');
 
     let res;
@@ -32,24 +32,24 @@ export const searchFunciton2 = async (ctx: Context) => {
         relations: ['collections', 'variants']
     } as any;
 
-    if (!page && !limit) {
+    if (!skip && !take) {
         res = await productRepo.find(options);
-    } else if (!page && limit) {
-        const lim = Number(limit);
-        if (Number.isNaN(lim) || lim < 0) ctx.throw(400, 'Limit must be a number >= 0');
+    } else if (!skip && take) {
+        const tk = Number(take);
+        if(Number.isNaN(tk) || Math.round(tk) !== tk || tk < 1) ctx.throw(400, 'Take must be an Integer >= 1');
         res = await productRepo.find({
             ...options,
-            take: lim
+            take: tk
         });
     } else {
-        const lim = Number(limit);
-        const pg = Number(page);
-        if (Number.isNaN(pg) || pg < 1) ctx.throw(400, 'Page must be a number >= 1');
-        if (Number.isNaN(lim) || lim < 0) ctx.throw(400, 'Limit must be a number >= 0');
+        const tk = Number(take);
+        const sk = Number(skip);
+        if(Number.isNaN(tk) || Math.round(tk) !== tk || tk < 1) ctx.throw(400, 'Take must be an Integer >= 1');
+        if(Number.isNaN(sk) || Math.round(sk) !== sk || sk < 0) ctx.throw(400, 'Skip must be an Integer >= 0');
         res = await productRepo.find({
             ...options,
-            skip: (pg - 1) * lim,
-            take: lim
+            skip: sk,
+            take: tk
         });
     }
 

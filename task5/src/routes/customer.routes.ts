@@ -9,5 +9,6 @@ customerRouter.get('/:id/amount', customerControllers.getCustomerTotalAmountSpen
 customerRouter.post('/', customerControllers.createCustomer);
 customerRouter.put('/:id', customerControllers.updateCustomer);
 customerRouter.delete('/:id', customerControllers.deleteCustomer);
+customerRouter.get('/:id/orders', customerControllers.getAllOrdersOfCustomer);
 
 export default customerRouter;

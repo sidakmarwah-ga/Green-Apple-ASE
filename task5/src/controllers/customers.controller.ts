@@ -2,29 +2,30 @@ import { Context } from "koa"
 import AppDataSource from "../lib/db";
 import { Customer } from "../entities/Customer";
 import { Order } from "../entities/Order";
+import { orderRepo } from "./orders.controller";
 
 export const customerRepo = AppDataSource.getRepository(Customer);
 
 export const getAllCustomers = async (ctx: Context) => {
-    const { page, limit } = ctx.query;
+    const { take, skip } = ctx.query;
     let res;
 
-    if (!page && !limit) {
+    if (!take && !skip) {
         res = await customerRepo.find();
-    } else if (!page && limit) {
-        const lim = Number(limit);
-        if (Number.isNaN(lim) || lim < 0) ctx.throw(400, 'Limit must be a number >= 0');
+    } else if (take && !skip) {
+        const tk = Number(skip);
+        if(Number.isNaN(tk) || Math.round(tk) !== tk || tk < 1) ctx.throw(400, 'Take must be an Integer >= 1');
         res = await customerRepo.find({
-            take: lim
+            take: tk
         });
     } else {
-        const lim = Number(limit);
-        const pg = Number(page);
-        if (Number.isNaN(pg) || pg < 1) ctx.throw(400, 'Page must be a number >= 1');
-        if (Number.isNaN(lim) || lim < 0) ctx.throw(400, 'Limit must be a number >= 0');
+        const sk = Number(skip);
+        const tk = Number(take);
+        if(Number.isNaN(tk) || Math.round(tk) !== tk || tk < 1) ctx.throw(400, 'Take must be an Integer >= 1');
+        if(Number.isNaN(sk) || Math.round(sk) !== sk || sk < 0) ctx.throw(400, 'Skip must be an Integer >= 0');
         res = await customerRepo.find({
-            skip: (pg - 1) * lim,
-            take: lim
+            skip: sk,
+            take: tk
         });
     }
 
@@ -118,5 +119,28 @@ export const getCustomerTotalAmountSpent = async (ctx: Context) => {
         message: 'Total Amount fetched successfully',
         customerId: Number(id),
         totalAmountSpent: Number(sum) || 0
+    }
+}
+
+export const getAllOrdersOfCustomer = async (ctx: Context) => {
+    const id = ctx.params.id;
+    if(!id) ctx.throw(400, 'Customer ID required');
+    const res = await orderRepo
+        .createQueryBuilder('order')
+        .innerJoin('order.product', 'product')
+        .innerJoin('order.variant', 'variant')
+        .select([
+            'order.id',
+            'order.productId',
+            'order.variantId',
+            'product.title',
+            'variant.title'
+        ])
+        .where('order.customerId = :id', {id})
+        .getRawMany();
+    
+    ctx.status = 200;
+    ctx.body = {
+        res
     }
 }

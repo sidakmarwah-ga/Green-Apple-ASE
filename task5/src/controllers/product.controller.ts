@@ -8,36 +8,55 @@ import { Order } from "../entities/Order";
 export const productRepo = AppDataSource.getRepository(Product);
 
 export const getAllProducts = async (ctx: Context) => {
-    const {page, limit} = ctx.query;
-    let res;
-    if(!page && !limit) {
-        res = await productRepo.find({
-            relations: ["collections", "variants"]
+    const {take, skip, fields} = ctx.query;
+
+    if(Array.isArray(fields)) 
+        ctx.throw(400, 'fields query value must be a string containing comma seperated names of fields.');
+
+    const currentFields = productRepo.metadata.propertiesMap;
+
+    const options : any = {};
+    const invalidFields : string[] = [];
+    options.select = fields?.split(',')
+        .filter(it => {
+            const isthere = it in currentFields;
+            if(!isthere) invalidFields.push(it);
+            return isthere;
         });
-    } else if(!page && limit) {
-        const lim = Number(limit);
-        if(lim)
-        if(Number.isNaN(lim) || lim < 0) ctx.throw(400, 'Limit must be a number >= 0');
-        res = await productRepo.find({
-            take: lim,
-            relations: ["collections", "variants"]
+    
+    let products;
+    if(!take && !skip) {
+        products = await productRepo.find({
+            ...options
+        });
+    } else if(take && !skip) {
+        const tk = Number(take);
+        if(Number.isNaN(tk) || Math.round(tk) !== tk || tk < 1) ctx.throw(400, 'Take must be an Integer >= 1');
+        products = await productRepo.find({
+            take: tk,
+            ...options
         });
     } else {
-        const lim = Number(limit);
-        const pg = Number(page);
-        if(Number.isNaN(pg) || pg < 1) ctx.throw(400, 'Page must be a number >= 1');
-        if(Number.isNaN(lim) || lim < 0) ctx.throw(400, 'Limit must be a number >= 0');
-        res = await productRepo.find({
-            skip: (pg - 1) * lim,
-            take: lim,
-            relations: ["collections", "variants"]
+        const sk = Number(skip);
+        const tk = Number(take);
+        if(Number.isNaN(tk) || Math.round(tk) !== tk || tk < 1) ctx.throw(400, 'Take must be an Integer >= 1');
+        if(Number.isNaN(sk) || Math.round(sk) !== sk || sk < 0) ctx.throw(400, 'Skip must be an Integer >= 0');
+        products = await productRepo.find({
+            skip: sk,
+            take: tk,
+            ...options
         });
     }
+
     ctx.status = 200;
-    ctx.body = {
+    const responseBody: any = {
         message: 'Products fetched successfully',
-        products: res
+        products
     };
+    if(invalidFields.length !== 0) {
+        responseBody.message = 'Products fetched, invalid fields ignored.';
+    }
+    ctx.body = responseBody;
 }
 
 export const getProductById = async (ctx : Context) => {
