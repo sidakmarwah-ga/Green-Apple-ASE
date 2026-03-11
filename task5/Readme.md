@@ -8,20 +8,20 @@ This project is a RESTful backend for a small e-commerce system built using:
 * **Koa**
 * **TypeORM**
 * **PostgreSQL**
-* **Docker (for PostgreSQL container)**
+* **Docker (PostgreSQL container)**
 
-The goal of this project was to implement real-world database relationships, advanced queries, pagination, and proper API structure using TypeORM with PostgreSQL-specific features like `ARRAY` and `JSONB`.
+The goal of this project was to implement real-world database relationships, advanced queries, pagination, and a properly structured API using TypeORM with PostgreSQL-specific features such as `ARRAY` and `JSONB`.
 
 ---
 
 # 🧩 Original Task Requirements
 
-Build REST APIs for a small e-commerce system with the following focus:
+Build REST APIs for a small e-commerce system with focus on:
 
 * Real-world entity relationships
 * Proper joins using TypeORM relations
 * QueryBuilder usage where necessary
-* Avoid N+1 queries
+* Avoiding N+1 queries
 * Graceful error handling
 * Pagination for listing APIs
 
@@ -31,7 +31,7 @@ Build REST APIs for a small e-commerce system with the following focus:
 
 ## Entities
 
-### • Customers
+### Customers
 
 * id
 * name
@@ -39,7 +39,7 @@ Build REST APIs for a small e-commerce system with the following focus:
 * phone
 * createdAt
 
-### • Products
+### Products
 
 * id
 * title
@@ -47,7 +47,7 @@ Build REST APIs for a small e-commerce system with the following focus:
 * tags (ARRAY / simple-array)
 * createdAt
 
-### • Variants
+### Variants
 
 * id
 * title
@@ -57,13 +57,13 @@ Build REST APIs for a small e-commerce system with the following focus:
 * stock
 * attributes (JSONB)
 
-### • Collections
+### Collections
 
 * id
 * title
 * createdAt
 
-### • Orders
+### Orders
 
 * id
 * customerId
@@ -78,13 +78,13 @@ Build REST APIs for a small e-commerce system with the following focus:
 
 # 🔗 Relationships Implemented
 
-* Product → Variants (One-to-Many)
-* Customer → Orders (One-to-Many)
-* Product ↔ Collections (Many-to-Many)
-* Variant → Product (Many-to-One)
-* Order → Customer (Many-to-One)
-* Order → Product (Many-to-One)
-* Order → Variant (Many-to-One)
+* Product → Variants (**One-to-Many**)
+* Customer → Orders (**One-to-Many**)
+* Product ↔ Collections (**Many-to-Many**)
+* Variant → Product (**Many-to-One**)
+* Order → Customer (**Many-to-One**)
+* Order → Product (**Many-to-One**)
+* Order → Variant (**Many-to-One**)
 
 ---
 
@@ -114,10 +114,10 @@ Default status: **Pending**
 * Orders
 
 ✅ Product with its variants
-✅ Search products by tag or title
+✅ Search products by **title or tags** using query parameter
 ✅ Add products to collections
 ✅ Get collection with products
-✅ Create order (stock validation + total calculation)
+✅ Create order (**stock validation + total calculation**)
 ✅ Get all orders of a customer
 ✅ Get total amount spent by a customer
 ✅ Get total sales of a product
@@ -131,35 +131,37 @@ Default status: **Pending**
 
 # 🌐 API Routes
 
----
-
-## 📦 Product Routes
-
-| Method | Route                       | Description                             |
-| ------ | --------------------------- | --------------------------------------- |
-| GET    | `/products`                 | Get all products (pagination supported) |
-| GET    | `/products/:id`             | Get product by ID (with relations)      |
-| POST   | `/products`                 | Create product                          |
-| PUT    | `/products/:id`             | Update product                          |
-| DELETE | `/products/:id`             | Delete product                          |
-| PUT    | `/products/:id/collections` | Add product to multiple collections     |
-| GET    | `/products/:id/sales`       | Get total number of sales for a product |
+All routes are grouped by resource and mounted through a central router.
 
 ---
 
-## 🧾 Order Routes
+# 📦 Product Routes
 
-| Method | Route         | Description                                       |
-| ------ | ------------- | ------------------------------------------------- |
-| GET    | `/orders`     | Get all orders (pagination supported)             |
-| GET    | `/orders/:id` | Get order by ID                                   |
-| POST   | `/orders`     | Create order (validates stock + calculates total) |
-| PUT    | `/orders/:id` | Update order                                      |
-| DELETE | `/orders/:id` | Delete order                                      |
+| Method | Route                       | Description                                       |
+| ------ | --------------------------- | ------------------------------------------------- |
+| GET    | `/products`                 | Get all products (supports pagination and search) |
+| GET    | `/products/:id`             | Get product by ID                                 |
+| POST   | `/products`                 | Create product                                    |
+| PUT    | `/products/:id`             | Update product                                    |
+| DELETE | `/products/:id`             | Delete product                                    |
+| PUT    | `/products/:id/collections` | Update collections of a product                   |
+| GET    | `/products/:id/sales`       | Get total sales count of a product                |
 
 ---
 
-## 👤 Customer Routes
+# 🎨 Variant Routes
+
+| Method | Route           | Description       |
+| ------ | --------------- | ----------------- |
+| GET    | `/variants`     | Get all variants  |
+| GET    | `/variants/:id` | Get variant by ID |
+| POST   | `/variants`     | Create variant    |
+| PUT    | `/variants/:id` | Update variant    |
+| DELETE | `/variants/:id` | Delete variant    |
+
+---
+
+# 👤 Customer Routes
 
 | Method | Route                   | Description                              |
 | ------ | ----------------------- | ---------------------------------------- |
@@ -173,57 +175,71 @@ Default status: **Pending**
 
 ---
 
-## 🗂️ Collection Routes
+# 🧾 Order Routes
 
-| Method | Route                       | Description                           |
-| ------ | --------------------------- | ------------------------------------- |
-| GET    | `/collections`              | Get all collections                   |
-| GET    | `/collections/:id`          | Get products of a collection          |
-| POST   | `/collections`              | Create collection                     |
-| PUT    | `/collections/:id`          | Update collection                     |
-| DELETE | `/collections/:id`          | Delete collection                     |
-| PUT    | `/collections/:id/products` | Add multiple products to a collection |
-
----
-
-## 🎨 Variant Routes
-
-| Method | Route                  | Description                   |
-| ------ | ---------------------- | ----------------------------- |
-| GET    | `/variants`            | Get all variants              |
-| GET    | `/variants/:productId` | Get all variants of a product |
-| POST   | `/variants`            | Create variant                |
-| PUT    | `/variants/:id`        | Update variant                |
-| DELETE | `/variants/:id`        | Delete variant                |
+| Method | Route         | Description                                         |
+| ------ | ------------- | --------------------------------------------------- |
+| GET    | `/orders`     | Get all orders (pagination supported)               |
+| GET    | `/orders/:id` | Get order by ID                                     |
+| POST   | `/orders`     | Create order (validates stock and calculates total) |
+| PUT    | `/orders/:id` | Update order                                        |
+| DELETE | `/orders/:id` | Delete order                                        |
 
 ---
 
-## 🔍 Search Route
+# 🗂️ Collection Routes
 
-| Method | Route               | Description                     |
-| ------ | ------------------- | ------------------------------- |
-| GET    | `/search?q=keyword` | Search products by tag or title |
+| Method | Route                       | Description                     |
+| ------ | --------------------------- | ------------------------------- |
+| GET    | `/collections`              | Get all collections             |
+| GET    | `/collections/:id`          | Get collection by ID            |
+| POST   | `/collections`              | Create collection               |
+| PUT    | `/collections/:id`          | Update collection               |
+| DELETE | `/collections/:id`          | Delete collection               |
+| PUT    | `/collections/:id/products` | Update products in a collection |
 
 ---
 
-# 📄 Pagination Support (Updated)
+# 🔎 Product Search
 
-Pagination is implemented using **direct `skip` and `take` query parameters**.
+The **`GET /products`** endpoint supports searching products by **title or tags** using the `query` parameter.
+
+### Example
+
+```
+GET /products?query=phone
+```
+
+This returns products where:
+
+* **title contains "phone"**
+* **tags contain "phone"**
+
+Search can be combined with pagination:
+
+```
+GET /products?query=phone&skip=0&take=10
+```
+
+---
+
+# 📄 Pagination Support
+
+Pagination is implemented using **`skip` and `take` query parameters**.
 
 Supported endpoints:
 
 * `GET /products`
 * `GET /orders`
 * `GET /customers`
-* `GET /search`
 
-### Usage:
+### Usage
 
 ```
 ?skip=NUMBER&take=NUMBER
 ```
 
-### Example:
+### Example
 
 ```
 GET /products?skip=10&take=5
@@ -231,14 +247,14 @@ GET /products?skip=10&take=5
 
 This will:
 
-* Skip the first 10 records
-* Return the next 5 records
+* Skip the first **10 records**
+* Return the next **5 records**
 
 ### Validation Rules
 
-* `skip` must be a number ≥ 0
-* `take` must be a number ≥ 1
-* Invalid values return `400 Bad Request`
+* `skip` must be **≥ 0**
+* `take` must be **≥ 1**
+* Invalid values return **400 Bad Request**
 
 If no pagination parameters are provided, all records are returned.
 
@@ -246,7 +262,7 @@ If no pagination parameters are provided, all records are returned.
 
 # ⚙️ Environment Variables
 
-Create a `.env` file in the root of the project:
+Create a `.env` file in the root of the project.
 
 ```
 PORT=
@@ -266,19 +282,6 @@ These variables configure:
 
 ---
 
-# 🛠️ Technical Highlights
-
-* Used TypeORM relations instead of manual joins
-* Used `jsonb` for flexible variant attributes
-* Used `simple-array` for product tags
-* Used enum type for order status
-* Added database constraints using `@Check`
-* Implemented pagination using `skip` and `take`
-* Avoided N+1 query problems using relations
-* Docker used for PostgreSQL setup
-
----
-
 # 🐳 Running with Docker
 
 PostgreSQL runs inside a Docker container to ensure:
@@ -287,6 +290,20 @@ PostgreSQL runs inside a Docker container to ensure:
 * Consistent database setup
 * Easy configuration via environment variables
 * Clean local setup without manual installation
+
+---
+
+# 🛠️ Technical Highlights
+
+* Used **TypeORM relations instead of manual joins**
+* Used **JSONB** for flexible variant attributes
+* Used **simple-array** for product tags
+* Used **ENUM** type for order status
+* Added **database constraints using `@Check`**
+* Implemented **pagination using `skip` and `take`**
+* Avoided **N+1 query problems** using relations
+* Structured **modular routing architecture**
+* Docker used for PostgreSQL setup
 
 ---
 

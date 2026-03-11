@@ -7,26 +7,27 @@ import { Order } from './Order';
 @Check(`"stock" >= 0`)
 export class Variant {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  title: string;
+  title!: string;
 
   @Column({unique: true})
-  sku: string;
+  sku!: string;
 
   @Column({unsigned: true})
-  price: number;
+  price!: number;
 
   @Column({unsigned: true})
-  stock: number;
+  stock!: number;
 
   @Column('jsonb')
-  attributes: any;
+  attributes!: any;
 
-  @ManyToOne(() => Product, product => product.variants)
-  product: Product;
+  @ManyToOne(() => Product, product => product.variants,
+  {onDelete: "CASCADE"})
+  product!: Product;
 
   @OneToMany(() => Order, order => order.variant)
-  orders: Order[];
+  orders!: Order[];
 }

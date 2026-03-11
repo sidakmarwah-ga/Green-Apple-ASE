@@ -4,14 +4,14 @@ import { Product } from './Product';
 @Entity()
 export class Collection {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  title: string;
+  title!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @ManyToMany(() => Product, product => product.collections)
-  products: Product[];
+  products!: Product[];
 }

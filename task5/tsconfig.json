@@ -3,6 +3,7 @@
     "target": "es2020",
     "module": "commonjs",
     "rootDir": "./src",
+    "outDir": "./dist",
 
     // "moduleResolution": "nodenext",
     // "allowImportingTsExtensions": true,
@@ -13,7 +14,7 @@
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false,
+    // "strictPropertyInitialization": false,
 
     // "noEmit": true,
     "types": ["node"]

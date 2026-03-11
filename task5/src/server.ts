@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
-import AppDataSource from './lib/db';
+import AppDataSource from './lib/DB';
 import router from "./routes";
 import koaQs from 'koa-qs';
 

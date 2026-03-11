@@ -4,20 +4,20 @@ import { Order } from './Order';
 @Entity()
 export class Customer {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column({unique: true})
-  email: string;
+  email!: string;
 
   @Column()
-  phone: string;
+  phone!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @OneToMany(() => Order, order => order.customer)
-  orders: Order[];
+  orders!: Order[];
 }

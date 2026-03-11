@@ -6,27 +6,27 @@ import { Collection } from './Collection';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  title: string;
+  title!: string;
 
   @Column()
-  description: string;
+  description!: string;
 
   @Column('simple-array')
-  tags: string[];
+  tags!: string[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @OneToMany(() => Order, order => order.product)
-  orders: Order[];
+  orders!: Order[];
 
   @OneToMany(() => Variant, variant => variant.product)
-  variants: Variant[];
+  variants!: Variant[];
 
   @ManyToMany(() => Collection, collection => collection.products)
   @JoinTable()
-  collections: Collection[];
+  collections!: Collection[];
 }

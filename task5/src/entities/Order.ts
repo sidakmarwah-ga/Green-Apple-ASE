@@ -2,45 +2,49 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, Ch
 import { Customer } from './Customer';
 import { Product } from './Product';
 import { Variant } from './Variant';
-
-export enum OrderStatus {
-  PENDING = "Pending",
-  CONFIRMED = "Confirmed",
-  CANCELLED = "Cancelled",
-  COMPLETE = "Complete",
-  FAILED = "Failed",
-  RETURNED = "Returned"
-}
+import { OrderStatus } from '../lib/Types';
 
 @Entity()
 @Check(`"numberOfUnitsOrdered" > 0`)
 @Check(`"totalAmount" > 0`)
 export class Order {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({
     type: "enum",
     enum: OrderStatus,
     default: OrderStatus.PENDING,
   })
-  status: OrderStatus;
+  status!: OrderStatus;
 
-  @Column({unsigned: true})
-  numberOfUnitsOrdered: number;
+  @Column({ unsigned: true })
+  numberOfUnitsOrdered!: number;
 
-  @Column({unsigned: true})
-  totalAmount: number;
+  @Column({ unsigned: true })
+  totalAmount!: number;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
-  @ManyToOne(() => Customer, customer => customer.orders)
-  customer: Customer;
+  @ManyToOne(() => Customer, customer => customer.orders,
+    {
+      onDelete: "SET NULL",
+      nullable: true
+    })
+  customer!: Customer;
 
-  @ManyToOne(() => Product, product => product.orders)
-  product: Product;
-  
-  @ManyToOne(() => Variant, variant => variant.orders)
-  variant: Variant;
+  @ManyToOne(() => Product, product => product.orders,
+    {
+      onDelete: "SET NULL",
+      nullable: true
+    })
+  product!: Product;
+
+  @ManyToOne(() => Variant, variant => variant.orders,
+    {
+      onDelete: "SET NULL",
+      nullable: true
+    })
+  variant!: Variant;
 }
