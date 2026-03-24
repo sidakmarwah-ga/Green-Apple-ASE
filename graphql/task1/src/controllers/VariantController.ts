@@ -1,6 +1,8 @@
 import VariantRepository from "../repositories/VariantRepository";
 import { Variant } from "../entities/VariantEntity";
-import { fetchShopifyDeletedVariants, fetchShopifyVariants } from "../services/VariantServices";
+import { fetchShopifyDeletedVariants, fetchShopifyVariants, getTotalVariantsCount } from "../services/VariantServices";
+import { BatchSizes } from "../lib/Constants";
+import { shopInfo } from "../services/ShopifyUtils";
 
 export default class VariantController {
 
@@ -14,16 +16,23 @@ export default class VariantController {
 
     let endCursor: string | null = null;
     let hasNextPage = true;
+    const batchSize = BatchSizes.full;
+
+    const totalVariantCount = await getTotalVariantsCount();
+    const totalBatches = Math.ceil(totalVariantCount / batchSize);
+
+    console.log(`Fetching all Variants of "${shopInfo.shopName}", total number of batches: ${totalBatches}`);
+
+    let currentBatchNumber = 1;
 
     while (hasNextPage) {
+
+      console.log(`Variant Batch ${currentBatchNumber}, started.`);
 
       const data = await fetchShopifyVariants(endCursor);
 
       // save to db
       const variantsRawData = data.productVariants.nodes;
-      // variantsRawData.forEach(async (variant) => {
-      //   await this.variantRepo.saveVariant(variant);
-      // });
 
       const variants: Variant[] = variantsRawData.map((variant: any) => {
 
@@ -64,7 +73,13 @@ export default class VariantController {
       hasNextPage = data.productVariants.pageInfo.hasNextPage;
       endCursor = data.productVariants.pageInfo.endCursor;
 
+      console.log(`Variant Batch ${currentBatchNumber}, ended.`);
+
+      currentBatchNumber++;
+
     }
+
+    console.log(`All Variants fetched successfully in ${totalBatches} batches`);
 
   }
 

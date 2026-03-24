@@ -82,9 +82,11 @@ export const fetchShopifyDeletedSubjects = async (
     query: `action:'destroy' AND subject_type:'${subjectType}' AND created_at:>='${createdAt.toUTCString()}'`
   }
 
-  // console.log(variables);
+  console.log(variables);
   
-  const { data } = await ShopifyGraphQL(queryString, variables);
+  const rawData = await ShopifyGraphQL(queryString, variables);
 
-  return data;
+  console.log(JSON.stringify(rawData))
+
+  return rawData.data;
 }

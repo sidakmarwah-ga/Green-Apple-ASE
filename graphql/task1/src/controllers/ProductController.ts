@@ -1,34 +1,40 @@
 import ProductRepository from "../repositories/ProductRepository";
 import { Product } from "../entities/ProductEntity";
-import { fetchShopifyDeletedProducts, fetchShopifyProducts } from "../services/ProductServices";
-import ShopRepository from "../repositories/ShopRepository";
+import { fetchShopifyDeletedProducts, fetchShopifyProducts, getTotalProductsCount } from "../services/ProductServices";
+import { BatchSizes } from "../lib/Constants";
+import { shopInfo } from "../services/ShopifyUtils";
 
 export default class ProductController {
 
   private productRepo: ProductRepository;
-  private shopRepo: ShopRepository;
 
   constructor() {
     this.productRepo = new ProductRepository();
-    this.shopRepo = new ShopRepository();
   }
 
   fetchAllProducts = async () => {
 
     let endCursor: string | null = null;
     let hasNextPage = true;
+    const batchSize = BatchSizes.full;
 
     await this.productRepo.deleteAllProducts();
 
+    const totalProductCount = await getTotalProductsCount();
+    const totalBatches = Math.ceil(totalProductCount / batchSize);
+
+    console.log(`Fetching all Products of "${shopInfo.shopName}", total number of batches: ${totalBatches}`);
+
+    let currentBatchNumber = 1;
+
     while (hasNextPage) {
 
-      const data = await fetchShopifyProducts(endCursor);
+      console.log(`Product Batch ${currentBatchNumber}, started.`);
+
+      const data = await fetchShopifyProducts(endCursor, null, batchSize);
 
       // save to db
       const productsRawData: Product[] = data.products.nodes;
-      // productsRawData.forEach(async (product) => {
-      //   await this.productRepo.saveProduct(product);
-      // });
 
       const products: Product[] = productsRawData.map((product: any) => {
         return {
@@ -45,7 +51,13 @@ export default class ProductController {
       hasNextPage = data.products.pageInfo.hasNextPage;
       endCursor = data.products.pageInfo.endCursor;
 
+      console.log(`Product Batch ${currentBatchNumber}, ended.`);
+
+      currentBatchNumber++;
+
     }
+
+    console.log(`All Products fetched successfully in ${totalBatches} batches`);
 
   }
 
@@ -71,9 +83,6 @@ export default class ProductController {
       console.log(productIDs);
 
       // delete form db
-      // deletedProducts.forEach(async (product: any) => {
-      //   await this.productRepo.deleteProduct(product.subjectId);
-      // });
       await this.productRepo.deleteProductsByIDs(productIDs);
 
       // setting variables for further fetches

@@ -2,9 +2,25 @@ import { BatchSizes } from "../lib/Constants";
 import { SubjectType } from "../lib/Types";
 import { fetchShopifyDeletedSubjects, ShopifyGraphQL } from "./ShopifyUtils";
 
+export const getTotalProductsCount = async (): Promise<number> => {
+  const queryString = `
+    query {
+      productsCount {
+        count
+        precision
+      }
+    }
+  `;
+  
+  const { data } = await ShopifyGraphQL(queryString);
+
+  return data.productsCount.count;
+}
+
 export const fetchShopifyProducts = async (
   endCursor: string | null = null,
-  query: string | null = null
+  query: string | null = null,
+  batchSize: number = BatchSizes.full
 ) => {
   const queryString = `
     query GetProducts($batchSize: Int!, $endCursor: String, $query: String) {
@@ -33,12 +49,12 @@ export const fetchShopifyProducts = async (
   `;
 
   const variables = {
-    batchSize: BatchSizes.full,
+    batchSize,
     endCursor,
     query
   }
 
-  console.log(variables);
+  // console.log(variables);
   
   const { data } = await ShopifyGraphQL(queryString, variables);
 
