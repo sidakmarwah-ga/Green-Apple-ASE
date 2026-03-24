@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AppError } from "../lib/AppError";
-import { HTTP_STATUS } from "../lib/Constants";
+import { BatchSizes, HTTP_STATUS } from "../lib/Constants";
 import { SubjectType } from "../lib/Types";
 
 const SHOP_NAME = process.env.SHOPIFY_STORE_NAME;
@@ -16,7 +16,7 @@ export const ShopifyGraphQL = async (query: string, variables?: any) => {
 
     const url = `https://${SHOP_NAME}.myshopify.com/admin/api/${API_VERSION}/graphql.json`;
 
-    console.log(shopInfo);
+    // console.log(shopInfo);
 
     const response = await axios.post(
       url,
@@ -60,8 +60,8 @@ export const fetchShopifyDeletedSubjects = async (
   endCursor: string | null = null
 ) => {
   const queryString = `
-    query GetProducts($endCursor: String, $query: String) {
-      events(query: $query,first: 250, after: $endCursor) {
+    query GetProducts($batchSize: Int!, $endCursor: String, $query: String) {
+      events(query: $query,first: $batchSize, after: $endCursor) {
         nodes {
           ... on BasicEvent {
             subjectId
@@ -77,11 +77,12 @@ export const fetchShopifyDeletedSubjects = async (
   `;
 
   const variables = {
+    batchSize: BatchSizes.full,
     endCursor,
     query: `action:'destroy' AND subject_type:'${subjectType}' AND created_at:>='${createdAt.toUTCString()}'`
   }
 
-  console.log(variables);
+  // console.log(variables);
   
   const { data } = await ShopifyGraphQL(queryString, variables);
 

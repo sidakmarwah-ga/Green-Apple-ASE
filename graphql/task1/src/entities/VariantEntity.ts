@@ -1,6 +1,7 @@
 import { Entity, Column, ManyToOne, Check } from 'typeorm';
 import { Product } from './ProductEntity';
 import { AppBaseEntity } from './BaseEntity';
+import { Shop } from './ShopEntity';
 
 @Entity()
 export class Variant extends AppBaseEntity {
@@ -10,7 +11,7 @@ export class Variant extends AppBaseEntity {
   @Column()
   displayName!: string;
 
-  @Column({unique: true, nullable: true})
+  @Column({nullable: true})
   sku!: string;
 
   @Column('double precision')
@@ -22,4 +23,8 @@ export class Variant extends AppBaseEntity {
   @ManyToOne(() => Product, product => product.variants,
   {onDelete: "CASCADE"})
   product!: Product;
+
+  @ManyToOne(() => Shop, shop => shop.variants,
+  {onDelete: "CASCADE"})
+  shop!: Shop;
 }

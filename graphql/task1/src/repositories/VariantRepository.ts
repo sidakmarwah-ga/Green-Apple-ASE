@@ -34,7 +34,10 @@ export default class VariantRepository {
       price,
       stock: inventoryQuantity,
       createdAt,
-      updatedAt
+      updatedAt,
+      shop: {
+				name: process.env.SHOPIFY_STORE_NAME
+			}
     });
 
     await this.variantRepo.save(variant);
@@ -59,53 +62,23 @@ export default class VariantRepository {
 
     // console.log(data);
 
-    const {
-      id,
-      title,
-      displayName,
-      product,
-      sku,
-      price,
-      inventoryQuantity,
-      createdAt,
-      updatedAt
-    } = data;
-
-    const newVariant = this.variantRepo.create({
-      id,
-      title,
-      displayName,
-      product: {
-        id: product.id
-      },
-      sku,
-      price,
-      stock: inventoryQuantity,
-      createdAt,
-      updatedAt
-    });
+    const newVariant = this.variantRepo.create(data);
 
     await this.variantRepo.save(newVariant);
 
   }
 
-  deleteVariant = async (id: string): Promise<DeleteResult> => {
+  saveMultipleVariants = async (variants: Variant[]): Promise<void> => {
 
-    const deleteReselt = await this.variantRepo.delete({ id });
+    const newVariants = this.variantRepo.create(variants);
 
-    return deleteReselt;
+    await this.variantRepo.insert(newVariants);
+
   }
 
-  deleteMultipleVariants = async (ids: any): Promise<DeleteResult> => {
+  deleteMultipleVariants = async (ids: string[]): Promise<DeleteResult> => {
 
-    const deleteReselt = await this.variantRepo.delete({ id: In(ids.map((variant: any) => variant.subjectId)) });
-
-    return deleteReselt;
-  }
-
-  deleteAllVariants = async (): Promise<DeleteResult> => {
-
-    const deleteReselt = await this.variantRepo.deleteAll();
+    const deleteReselt = await this.variantRepo.delete({ id: In(ids) });
 
     return deleteReselt;
   }

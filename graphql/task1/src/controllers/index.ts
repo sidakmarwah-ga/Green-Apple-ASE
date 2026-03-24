@@ -23,15 +23,18 @@ export const fetchController = async (ctx: Context) => {
       );
     }
 
+    const timeNow = new Date();
+
     await shopRepo.createShop(
       process.env.SHOPIFY_STORE_NAME!,
-      new Date()
+      timeNow
     );
 
     await productController.fetchAllProducts();
     await variantController.fetchAllVariants();
 
   } catch (error: any) {
+    await shopRepo.deleteShopByName(process.env.SHOPIFY_STORE_NAME!);
     errorHandler(error, ctx);
   }
 

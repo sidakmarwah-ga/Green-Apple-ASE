@@ -1,4 +1,4 @@
-import { DeleteResult, Repository, UpdateResult } from "typeorm";
+import { DeleteResult, In, Repository, UpdateResult } from "typeorm";
 import AppDataSource from "../lib/DB";
 import { Product } from "../entities/ProductEntity";
 
@@ -45,12 +45,30 @@ export default class ProductRepository {
 	saveProduct = async (data: Product): Promise<void> => {
 
 		if (await this.productRepo.exists({ where: { id: data.id } })) {
-			await this.productRepo.save(data);
+			await this.productRepo.save({
+				...data,
+				shop: {
+					name: process.env.SHOPIFY_STORE_NAME
+				}
+			});
 			return;
 		}
 
-		const newProduct = this.productRepo.create(data);
+		const newProduct = this.productRepo.create({
+			...data,
+			shop: {
+				name: process.env.SHOPIFY_STORE_NAME
+			}
+		});
 		await this.productRepo.save(newProduct);
+
+	}
+
+	saveMultipleProducts = async (products: Product[]): Promise<void> => {
+
+		const newProducts = this.productRepo.create(products);
+
+		await this.productRepo.insert(newProducts);
 
 	}
 
@@ -64,8 +82,18 @@ export default class ProductRepository {
 		return response;
 	}
 
+	deleteProductsByIDs = async (ids: string[]): Promise<void> => {
+		await this.productRepo.delete({
+			id: In(ids)
+		});
+	}
+
 	deleteAllProducts = async (): Promise<DeleteResult> => {
-		const response: DeleteResult = await this.productRepo.deleteAll();
+		const response: DeleteResult = await this.productRepo.delete({
+			shop: {
+				name: process.env.SHOPIFY_STORE_NAME
+			}
+		});
 		return response;
 	}
 

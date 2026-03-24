@@ -1,4 +1,4 @@
-import { Repository, UpdateResult } from "typeorm";
+import { DeleteResult, Repository, UpdateResult } from "typeorm";
 import { Shop } from "../entities/ShopEntity";
 import AppDataSource from "../lib/DB";
 
@@ -21,6 +21,13 @@ export default class ShopRepository {
       where: {name}
     });
     return shop;
+  }
+
+  deleteShopByName = async (name: string): Promise<DeleteResult> => {
+    const deleteResult = await this.shopRepo.delete({
+      name
+    });
+    return deleteResult;
   }
 
   createShop = async (name: string, lastSyncAt: Date): Promise<Shop> => {

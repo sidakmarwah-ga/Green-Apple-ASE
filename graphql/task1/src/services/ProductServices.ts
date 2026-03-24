@@ -1,3 +1,4 @@
+import { BatchSizes } from "../lib/Constants";
 import { SubjectType } from "../lib/Types";
 import { fetchShopifyDeletedSubjects, ShopifyGraphQL } from "./ShopifyUtils";
 
@@ -6,8 +7,8 @@ export const fetchShopifyProducts = async (
   query: string | null = null
 ) => {
   const queryString = `
-    query GetProducts($endCursor: String, $query: String) {
-      products(first: 250, after: $endCursor, query: $query) {
+    query GetProducts($batchSize: Int!, $endCursor: String, $query: String) {
+      products(first: $batchSize, after: $endCursor, query: $query) {
         nodes {
           id
           title
@@ -32,6 +33,7 @@ export const fetchShopifyProducts = async (
   `;
 
   const variables = {
+    batchSize: BatchSizes.full,
     endCursor,
     query
   }

@@ -12,7 +12,7 @@ export default class ProductController {
     this.productRepo = new ProductRepository();
     this.shopRepo = new ShopRepository();
   }
-  
+
   fetchAllProducts = async () => {
 
     let endCursor: string | null = null;
@@ -21,14 +21,25 @@ export default class ProductController {
     await this.productRepo.deleteAllProducts();
 
     while (hasNextPage) {
-      
+
       const data = await fetchShopifyProducts(endCursor);
 
       // save to db
-      const products: Product[] = data.products.nodes;
-      products.forEach(async (product) => {
-        await this.productRepo.createProduct(product);
+      const productsRawData: Product[] = data.products.nodes;
+      // productsRawData.forEach(async (product) => {
+      //   await this.productRepo.saveProduct(product);
+      // });
+
+      const products: Product[] = productsRawData.map((product: any) => {
+        return {
+          ...product,
+          shop: {
+            name: process.env.SHOPIFY_STORE_NAME
+          }
+        }
       });
+
+      await this.productRepo.saveMultipleProducts(products);
 
       // setting variables for further fetches
       hasNextPage = data.products.pageInfo.hasNextPage;
@@ -37,17 +48,17 @@ export default class ProductController {
     }
 
   }
-  
+
   syncProducts = async (lastSyncAt: Date) => {
 
     console.log('Sync Products called');
-    
+
     let endCursor: string | null = null;
     let hasNextPage = true;
 
     console.log("Deleting products")
 
-    while(hasNextPage) {
+    while (hasNextPage) {
 
       const data = await fetchShopifyDeletedProducts(
         lastSyncAt,
@@ -55,13 +66,15 @@ export default class ProductController {
       );
 
       const deletedProducts = data.events.nodes;
+      const productIDs = deletedProducts.map((product: any) => product.subjectId);
 
-      console.log(deletedProducts);
+      console.log(productIDs);
 
       // delete form db
-      deletedProducts.forEach(async (product: any) => {
-        await this.productRepo.deleteProduct(product.subjectId);
-      });
+      // deletedProducts.forEach(async (product: any) => {
+      //   await this.productRepo.deleteProduct(product.subjectId);
+      // });
+      await this.productRepo.deleteProductsByIDs(productIDs);
 
       // setting variables for further fetches
       hasNextPage = data.events.pageInfo.hasNextPage;
@@ -74,7 +87,7 @@ export default class ProductController {
 
     console.log('Updating products');
 
-    while(hasNextPage) {
+    while (hasNextPage) {
 
       const query = `updated_at:>="${lastSyncAt.toUTCString()}"`;
 

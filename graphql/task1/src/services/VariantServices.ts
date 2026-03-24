@@ -1,3 +1,4 @@
+import { BatchSizes } from "../lib/Constants";
 import { SubjectType } from "../lib/Types";
 import { fetchShopifyDeletedSubjects, ShopifyGraphQL } from "./ShopifyUtils";
 
@@ -6,8 +7,8 @@ export const fetchShopifyVariants = async (
   query: string | null = null
 ) => {
   const queryString = `
-    query GetProductVariants($endCursor: String, $query: String) {
-      productVariants(first: 250, after: $endCursor, query: $query) {
+    query GetProductVariants($batchSize: Int!, $endCursor: String, $query: String) {
+      productVariants(first: $batchSize, after: $endCursor, query: $query) {
         nodes {
           id
           sku
@@ -30,6 +31,7 @@ export const fetchShopifyVariants = async (
   `;
 
   const variables = {
+    batchSize: BatchSizes.full,
     endCursor,
     query
   }
@@ -41,7 +43,7 @@ export const fetchShopifyVariants = async (
   return data;
 }
 
-export const fetchShopifyDeletedVarinats = async (
+export const fetchShopifyDeletedVariants = async (
   deletedAfter: Date,
   endCursor: string | null = null
 ) => {

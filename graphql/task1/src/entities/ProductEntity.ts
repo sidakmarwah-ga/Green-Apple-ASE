@@ -14,7 +14,7 @@ export class Product extends AppBaseEntity {
   @Column()
   productType!: string;
 
-  @Column('jsonb')
+  @Column('jsonb', {nullable: true})
   category!: any;
   
   @Column()
@@ -23,7 +23,7 @@ export class Product extends AppBaseEntity {
   @Column()
   vendor!: string;
   
-  @Column()
+  @Column({nullable: true})
   publishedAt!: Date;
 
   @OneToMany(() => Variant, variant => variant.product)
