@@ -5,7 +5,7 @@ import { fetchShopifyDeletedSubjects, ShopifyGraphQL } from "./ShopifyUtils";
 export const getTotalVariantsCount = async (): Promise<number> => {
   const queryString = `
     query {
-      productVariantsCount {
+      productVariantsCount(limit: null) {
         count
         precision
       }
